@@ -18,7 +18,13 @@
 //  Modified by Xydane
 #define MATRIX_ROWS 16
 #define MATRIX_COLS 8
+
+#define MATRIX_ROW_PINS { A4, B3, A5, A15, A6, C15, A7, A10, B0, A9, B10, A8, B15, B14, B13, B12 }
+#define MATRIX_COL_PINS { A0, B9, A1, B8, A2, B5, A3, B4 }
+
 #define DIODE_DIRECTION COL2ROW
+
+#define TAPPING_TERM (200)
 
 // Iso fix for Space Cadet, comment for ANSI layouts
 #define LSPO_KEY KC_8

@@ -47,8 +47,4 @@ void __early_init(void) {
  */
 void boardInit(void) {
 	AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
-	palSetPadMode(GPIOB, 1, PAL_MODE_OUTPUT_PUSHPULL);
-	palSetPadMode(GPIOB, 11, PAL_MODE_OUTPUT_PUSHPULL);
-	palClearPad(GPIOB, 1);
-	palSetPad(GPIOB, 11);
 }
