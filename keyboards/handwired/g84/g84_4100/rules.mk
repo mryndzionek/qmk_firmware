@@ -1,4 +1,5 @@
 # project specific files
+VPATH += keyboards/handwired/g84/bluepill
 SRC =	led.c keyboard.c
 
 # GENERIC STM32F103C8T6 board - stm32duino bootloader
@@ -44,3 +45,14 @@ ARMV = 7
 # This also requires a patch to chibios:
 #   <tmk_dir>/tmk_core/tool/chibios/ch-bootloader-jump.patch
 #STM32_BOOTLOADER_ADDRESS = 0x1FFFC800
+
+#BOOTMAGIC_ENABLE = yes	# Virtual DIP switch configuration
+EXTRAKEY_ENABLE = yes	# Audio control and System control
+CONSOLE_ENABLE = yes	# Console for debug
+COMMAND_ENABLE = yes    # Commands for debug and configuration
+SLEEP_LED_ENABLE = yes  # Breathing sleep LED during USB suspend
+NKRO_ENABLE = yes	    # USB Nkey Rollover
+MOUSEKEY_ENABLE = no
+TAP_DANCE_ENABLE = yes
+
+DEFAULT_FOLDER = handwired/g84/g84_4100
