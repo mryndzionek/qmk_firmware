@@ -1,5 +1,4 @@
-#ifndef ATREUS50_H
-#define ATREUS50_H
+#pragma once
 
 #include "quantum.h"
 
@@ -32,5 +31,3 @@
 }
 
 #define KC_ KC_TRNS
-
-#endif

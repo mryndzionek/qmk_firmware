@@ -1,24 +1,28 @@
-# Handwired Atreus50
 
-This firmware is for a handwired Atreus50 using an Arduino Pro Micro.
+# Atreus50 handwired
 
-Keyboard Maintainer: [The QMK Community](https://github.com/qmk)  
-Hardware Supported: Arduino Pro Micro  
+Handwired Atreus50 using BluePill (generic Chinese STM32F103C8T6)
 
-## Pinout
+Keyboard Maintainer: ???
+Hardware Supported: Bluepill STM32F103C8T6
+Hardware Availability: Everywhere
 
-The following pins are used:
-- Columns 1-13: D4, D7, E6, B4, B5, B6, B2, B3, B1, F7, F6, F5, F4
-- Rows 1-4: D3, D2, D1, D0
-
-## Compiling and loading the firmware
-
-Make example for this keyboard (after setting up your build environment):
+Make :
 
     make handwired/atreus50:default
 
-To flash the firmware onto the microcontroller, run `make avrdude`, and press the reset button.
-
-    make handwired/atreus50:default:avrdude
-
 See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
+
+Read everything before using it.
+
+## Introduction
+
+Handwired Atreus50 with Bluepill board controller.
+
+## Resistor fix
+
+If you want to use the Bluepill USB port, it's very likely that you need to solder a 1.8 kΩ between PA12 and 3.3V.
+
+## Pinout
+
+
