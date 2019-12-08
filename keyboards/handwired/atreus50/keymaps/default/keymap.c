@@ -31,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
-  COLEMAK,
-  DVORAK,
   LOWER,
   RAISE,
   MOVEMENT,
@@ -48,21 +46,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT(
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
     X0,      KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, X4,
-    KC_GRV,  KC_LCTL, KC_LALT, KC_LGUI, LOWER,   KC_SPC,  X3,      KC_RSFT, KC_BSPC, RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
-  ),
-
-  [_COLEMAK] = LAYOUT(
-    KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_MINS,
-    X0,      KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, X4,
-    KC_GRV,  KC_LCTL, KC_LALT, KC_LGUI, LOWER,   KC_SPC,  X3,      KC_RSFT, KC_BSPC, RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
-  ),
-
-  [_DVORAK] = LAYOUT(
-    KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,                      KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_MINS,
-    X0,      KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                      KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH,
-    KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,                      KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    X4,
+    KC_RALT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, X4,
     KC_GRV,  KC_LCTL, KC_LALT, KC_LGUI, LOWER,   KC_SPC,  X3,      KC_RSFT, KC_BSPC, RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
   ),
 
@@ -89,21 +73,53 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-/* Layer based ilumination, just binary */
-uint32_t layer_state_set_user(uint32_t state) {
-  switch (biton32(state)) {
-  case _QWERTY:
-    palSetPad(GPIOB, 1);  //OFF Color A
-    palClearPad(GPIOB, 11); //ON Color B
-    break;
-  case _MOVEMENT:
-    palClearPad(GPIOB, 1); //ON Color A
-    palClearPad(GPIOB, 11);  //ON Color B
-    break;
-  default: //  for any other layers, or the default layer
-    palClearPad(GPIOB, 1); //ON Color A
-    palSetPad(GPIOB, 11);  //OFF Color B
-    break;
-  }
-  return state;
+void persistent_default_layer_set(uint16_t default_layer) {
+  eeconfig_update_default_layer(default_layer);
+  default_layer_set(default_layer);
 }
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+        case QWERTY:
+          if (record->event.pressed) {
+            #ifdef AUDIO_ENABLE
+              PLAY_SONG(tone_qwerty);
+            #endif
+            persistent_default_layer_set(1UL<<_QWERTY);
+          }
+          return false;
+          break;
+        case LOWER:
+          if (record->event.pressed) {
+            layer_on(_LOWER);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+          } else {
+            layer_off(_LOWER);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+          }
+          return false;
+          break;
+        case RAISE:
+          if (record->event.pressed) {
+            layer_on(_RAISE);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+          } else {
+            layer_off(_RAISE);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+          }
+          return false;
+          break;
+        case BACKLIT:
+          if (record->event.pressed) {
+            register_code(KC_RSFT);
+            #ifdef BACKLIGHT_ENABLE
+              backlight_step();
+            #endif
+          } else {
+            unregister_code(KC_RSFT);
+          }
+          return false;
+          break;
+      }
+    return true;
+};
